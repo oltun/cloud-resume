@@ -1,0 +1,83 @@
+:root {
+    --bg: #0b0b0c;
+    --surface: #1c1c1e;
+    --text: #e5e5e5;
+    --muted: #9ca3af;
+    --accent: #ef4444;
+  }
+  
+  * { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* Scroll progress bar: a fixed strip at the top that fills as you scroll */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    z-index: 100;
+  }
+  
+  @supports (animation-timeline: scroll()) {
+    body::before {
+      animation: grow-progress linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+  
+  @keyframes grow-progress {
+    to { transform: scaleX(1); }
+  }
+  
+  header {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 2rem;
+  }
+  
+  header h1 { margin: 0; font-size: 2.5rem; }
+  header p { color: var(--muted); margin: 0.5rem 0 1rem; }
+  
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+  
+  section { margin-bottom: 3rem; }
+  
+  h2 {
+    color: var(--accent);
+    border-bottom: 1px solid var(--surface);
+    padding-bottom: 0.4rem;
+  }
+  
+  article {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  article h3 { margin: 0 0 0.25rem; }
+  article > p { color: var(--muted); margin: 0.25rem 0; }
+  ul { padding-left: 1.25rem; }
+  
+  @media (prefers-reduced-motion: reduce) {
+    body::before { display: none; }
+  }
