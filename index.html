@@ -101,6 +101,37 @@
         </ul>
       </section>
     </main>
+
+    <p id="visitor-count" hidden>Visitors: <span id="visitor-count-value"></span></p>
+
+    <script>
+        (async () => {
+          const API_URL = "https://hthzo9eeo0.execute-api.eu-north-1.amazonaws.com/visit";
+          const box = document.getElementById("visitor-count");
+          const out = document.getElementById("visitor-count-value");
+          if (!box || !out) return;
+        
+          try {
+            let stored = null;
+            try { stored = sessionStorage.getItem("visitCount"); } catch (_) {}
+        
+            let count = Number(stored);
+            if (stored === null || !Number.isFinite(count)) {
+              const res = await fetch(API_URL, { method: "POST" });
+              if (!res.ok) throw new Error("HTTP " + res.status);
+              const data = await res.json();
+              count = Number(data.count);
+              if (!Number.isFinite(count)) throw new Error("Bad response");
+              try { sessionStorage.setItem("visitCount", String(count)); } catch (_) {}
+            }
+        
+            out.textContent = count.toLocaleString("en-GB");
+            box.hidden = false;
+          } catch (err) {
+            console.warn("Visitor counter unavailable:", err);
+          }
+        })();
+        </script>
   
   </body>
 </html>
