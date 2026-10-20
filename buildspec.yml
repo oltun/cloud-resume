@@ -8,4 +8,5 @@ phases:
       - aws lambda update-function-code --function-name "$FUNCTION_NAME" --zip-file fileb://function.zip --region eu-north-1
       - aws s3 cp index.html "s3://$SITE_BUCKET/index.html" --region eu-north-1
       - aws s3 cp style.css "s3://$SITE_BUCKET/style.css" --region eu-north-1
-      - aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/" "/index.html" "/style.css"
+      - aws s3 cp favicon.png "s3://$SITE_BUCKET/favicon.png" --region eu-north-1
+      - aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/" "/index.html" "/style.css" "/favicon.png"
