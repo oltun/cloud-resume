@@ -1,7 +1,7 @@
 set -euo pipefail
 
 echo "1/3 Required files exist"
-for f in index.html style.css backend/lambda_function.py; do
+for f in index.html style.css favicon.png backend/lambda_function.py; do
   [ -f "$f" ] || { echo "MISSING: $f"; exit 1; }
 done
 
