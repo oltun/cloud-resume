@@ -131,7 +131,7 @@ AWS CodeBuild (smallest compute size, 5-minute timeout, one build at a time)
 - **CORS is not access control.** It is enforced by browsers, not by the server. I tested with `curl` and a request claiming a disallowed origin still ran and incremented the count; CORS only stopped a browser from reading the reply. The throttle is the real control.
 - **Throttling is best-effort.** AWS describes API Gateway throttling as a target, not a guaranteed hard cap. The Lambda concurrency cap, the fixed DynamoDB capacity and the account spend limit sit behind it.
 - **The count can be inflated.** Anyone can script calls within the throttle. It is a simple visitor counter, not trustworthy analytics.
-- **The API has no WAF in front of it** (see the [WAF section](#security-aws-waf-sql-injection-testing) below).
+- **The API has no WAF in front of it, by decision.** An HTTP API can't take a WAF directly, and the alternatives cost money or add moving parts for a counter that ignores request data. See [why I did not put a WAF in front of the API](#why-i-did-not-put-a-waf-in-front-of-the-api).
 ### Known limits of the pipeline
  
 - **Whoever can merge to `main` can deploy to production.** The ruleset stops accidents and enforces a routine, but a repository admin can edit or switch it off, so the real protection against account takeover is two-factor login on GitHub.
@@ -191,7 +191,7 @@ All four rule groups, and the full sampled-requests view:
 - **The 403 alone isn't proof.** A private S3 bucket also returns 403 for missing paths, so I confirmed the block from WAF's sampled requests, which name the exact rule.
 - **CloudFront manages its one-click web ACL.** My manually added SQL rule group disappeared after I saved the CloudFront security settings (probably because CloudFront re-applied its own configuration), so I re-added it in the WAF console.
 - **A WAF is one layer, not a shield.** Within minutes of the WAF going live, automated scanners probed for `/wp-admin/install.php`. The WAF allowed those requests, because they match no attack rule. The site isn't WordPress, so there was nothing there to exploit.
-- **Limits of my test.** I tested a single, simple, URL-encoded probe against the query string. I did not test encoding tricks or other injection points. SQL injection protection matters where input reaches a database. The visitor-counter API now exists, but it ignores request data entirely and DynamoDB isn't a SQL database, so there is little to inject into. The API is not behind a WAF. Whether and how to put one in front of it (for example, CloudFront in front of the API) is something I have not evaluated or verified.
+- **Limits of my test.** I tested a single, simple, URL-encoded probe against the query string. I did not test encoding tricks or other injection points. SQL injection protection matters where input reaches a database. The visitor-counter API now exists, but it ignores request data entirely and DynamoDB isn't a SQL database, so there is little to inject into. The API is not behind a WAF: I evaluated that afterwards and decided against it (see [why I did not put a WAF in front of the API](#why-i-did-not-put-a-waf-in-front-of-the-api)).
 ### Cost
  
 The one-click setup was estimated at $8.01/month at 10,000 requests/month (web ACL plus three rule groups plus request charges), and the extra SQL rule group adds roughly $1/month. WAF is billed hourly, at roughly a cent an hour on those figures, and it ran for about 30 minutes, so by arithmetic the trial should have cost a cent or two. That is an estimate from AWS's pricing; I have not checked it against the invoice. I decommissioned it because the monthly cost is hard to justify for a static CV. I disabled the protection in CloudFront, and verified in the WAF console that no web ACL remained.
@@ -200,6 +200,18 @@ The one-click setup was estimated at $8.01/month at 10,000 requests/month (web A
  
 - **Cloudflare WAF:** free tier, but not open source, and it would put a second CDN in front of CloudFront.
 - **Open-source WAF (ModSecurity or Coraza with the OWASP Core Rule Set):** needs a server in the request path, which CloudFront and S3 can't host. It could only be added as a lab or extra EC2 cost, so I haven't deployed it.
+
+### Why I did not put a WAF in front of the API
+
+After the trial I checked whether the visitor-counter API could be protected by a WAF too, and decided against it. The findings below come from AWS's documentation as of 20 Oct 2026; prices and plans may change.
+
+- **An HTTP API can't take a WAF directly.** AWS's REST-vs-HTTP API comparison lists AWS WAF as supported for REST APIs and not for HTTP APIs. The options are putting CloudFront in front of the API (AWS re:Post answers suggest this; I haven't tested it) or rebuilding the API as a REST API, which costs more per request.
+- **A WAF in front would not close the original URL.** HTTP APIs have no resource policies, so the API's own address would stay public and bypass the WAF unless I also added a secret-header check in a Lambda authorizer. That is extra moving parts for a counter.
+- **The cost doesn't fit my hard-ceiling rule.** Pay-as-you-go WAF charges a monthly fee per web ACL plus per-rule and per-request fees, and the per-request fees grow under attack. CloudFront's flat-rate Free plan is $0 with no overage charges, but AWS lists its SQL database protections from the Pro plan ($15/month) upward, and the Free plan allows only 5 WAF rules. I did not check whether my account is eligible for the Free plan (the docs say accounts using the AWS Free Tier are not), or whether it would allow a SQL injection rule.
+- **There is little for it to protect.** The Lambda ignores the request body and parameters, always updates one fixed key, and DynamoDB is not a SQL database. The existing limits (1 request/second route throttle, Lambda concurrency cap of 2, fixed 1 read / 1 write unit, $20/month spend limit) already bound the damage from abuse.
+
+**Decision:** no WAF in front of the API. I would revisit this if the API ever accepts or stores user input.
+
 ## Design decisions and lessons learned
  
 ### Hosting, domain and API
@@ -259,4 +271,4 @@ The DynamoDB console estimates about $0.63/month for 1 read and 1 write unit bef
 - [x] CI/CD: pull request ruleset, GitHub Actions checks, and a pull-based AWS pipeline (CodePipeline and CodeBuild) that deploys the site and the Lambda from `main`
 - [ ] Write-up and blog post
 - [ ] Restyle the site (the counter's position is temporary, and a favicon is missing, so browsers' automatic favicon request returns a harmless 403)
-- [ ] Open question: whether and how to put a WAF in front of the API. I haven't verified that an HTTP API can take a WAF directly, and I haven't priced the alternatives
+- [x] Evaluated a WAF in front of the API and decided against it (see [why I did not put a WAF in front of the API](#why-i-did-not-put-a-waf-in-front-of-the-api))
