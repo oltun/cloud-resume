@@ -194,7 +194,7 @@ All four rule groups, and the full sampled-requests view:
 - **Limits of my test.** I tested a single, simple, URL-encoded probe against the query string. I did not test encoding tricks or other injection points. SQL injection protection matters where input reaches a database. The visitor-counter API now exists, but it ignores request data entirely and DynamoDB isn't a SQL database, so there is little to inject into. The API is not behind a WAF: I evaluated that afterwards and decided against it (see [why I did not put a WAF in front of the API](#why-i-did-not-put-a-waf-in-front-of-the-api)).
 ### Cost
  
-The one-click setup was estimated at $8.01/month at 10,000 requests/month (web ACL plus three rule groups plus request charges), and the extra SQL rule group adds roughly $1/month. WAF is billed hourly, at roughly a cent an hour on those figures, and it ran for about 30 minutes, so by arithmetic the trial should have cost a cent or two. That is an estimate from AWS's pricing; I have not checked it against the invoice. I decommissioned it because the monthly cost is hard to justify for a static CV. I disabled the protection in CloudFront, and verified in the WAF console that no web ACL remained.
+The one-click setup was estimated at $8.01/month at 10,000 requests/month (web ACL plus three rule groups plus request charges), and the extra SQL rule group adds roughly $1/month. WAF is billed hourly, at roughly a cent an hour on those figures, and it ran for about 30 minutes, so by arithmetic the trial should have cost a cent or two. That was an estimate from AWS's pricing. Afterwards I checked Cost Explorer for 1 to 21 October 2026, grouped by service, and it showed US$0.00 for AWS WAF. Cost Explorer rounds to whole cents, so the trial cost under half a cent. That figure is before any credits. I decommissioned it because the monthly cost is hard to justify for a static CV. I disabled the protection in CloudFront, and verified in the WAF console that no web ACL remained.
  
 ### Alternatives considered
  
@@ -251,7 +251,7 @@ Ongoing cost is the domain (about $12/year at renewal) plus AWS usage, which I e
 - Fixed DynamoDB capacity, the API throttle and the Lambda concurrency cap described above
 ### Pipeline costs
  
-From AWS's published pricing (not yet checked against an invoice):
+The list below comes from AWS's published pricing. As a check, Cost Explorer for 1 to 21 October 2026 (the period the pipeline has been running) showed US$0.00 for every service before credits. Before credits means credits did not hide anything in that period, but it covers only three weeks. I did not check the credit balance or expiry, so it doesn't guarantee future months.
  
 - GitHub Actions is free for standard runners on public repositories
 - AWS CodePipeline: AWS's pricing page lists one free active V1 pipeline per month, and this is a single V1 pipeline
@@ -261,7 +261,7 @@ From AWS's published pricing (not yet checked against an invoice):
 - None of these is a hard cap on spend. The $20/month project limit remains the last stop
 ### DynamoDB
  
-The DynamoDB console estimates about $0.63/month for 1 read and 1 write unit before any free tier. AWS's pricing page lists a free tier of 25 provisioned read and write units and 25 GB per Region, so I expect this table to cost nothing. **I have not yet checked this against an actual AWS invoice.**
+The DynamoDB console estimates about $0.63/month for 1 read and 1 write unit before any free tier. AWS's pricing page lists a free tier of 25 provisioned read and write units and 25 GB per Region, so I expect this table to cost nothing. Cost Explorer for 1 to 21 October 2026 showed US$0.00 for DynamoDB before credits, which fits that expectation. I didn't check how the free tier is applied on my account type, so I can't say for certain that it's what kept the figure at zero.
  
 ## Roadmap
  
@@ -272,7 +272,7 @@ The DynamoDB console estimates about $0.63/month for 1 read and 1 write unit bef
 - [x] Visitor counter (API Gateway, Lambda, DynamoDB)
 - [x] CI/CD: pull request ruleset, GitHub Actions checks, and a pull-based AWS pipeline (CodePipeline and CodeBuild) that deploys the site and the Lambda from `main`
 - [ ] Write-up and blog post
-- [ ] Restyle the site (the counter's position is temporary)
+- [x] Restyled the site: red and black theme with interactive elements, content updated from my LinkedIn profile, visitor counter moved into the footer
 - [x] Evaluated a WAF in front of the API and decided against it (see [why I did not put a WAF in front of the API](#why-i-did-not-put-a-waf-in-front-of-the-api))
 - [x] Favicon, published through the pipeline (the browser's automatic favicon request no longer returns a 403)
 - [x] Dedicated execution role for the Lambda, instead of a broad existing role
