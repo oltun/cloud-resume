@@ -46,7 +46,7 @@ API Gateway HTTP API (eu-north-1)
   |  route throttle: 1 request/second, burst 2
   v
 Lambda function, Python (reserved concurrency: 2)
-  |  IAM: dynamodb:UpdateItem on one table only
+  |  own execution role: dynamodb:UpdateItem on one table, log writes to its own log group
   v
 DynamoDB table (provisioned 1 read / 1 write unit, auto scaling off)
 ```
@@ -67,7 +67,7 @@ AWS CodePipeline (watches main through a GitHub connection limited to this one r
 AWS CodeBuild (smallest compute size, 5-minute timeout, one build at a time)
   |  1. runs scripts/check.sh again and stops if it fails
   |  2. zips and updates the Lambda function code
-  |  3. uploads index.html and style.css to the site bucket (versioning on)
+  |  3. uploads index.html, style.css, and favicon.png to the site bucket (versioning on)
   |  4. invalidates the CloudFront cache
 ```
  
@@ -96,7 +96,7 @@ AWS CodeBuild (smallest compute size, 5-minute timeout, one build at a time)
  
 - DynamoDB table holding a single item (`id = "visitors"`) with a `visit_count` number, provisioned at 1 read and 1 write unit with auto scaling off, so capacity is fixed
 - Lambda function (Python) that makes one atomic `UpdateItem` call with `ADD` to increment the count and return the new value; errors are logged server-side and the caller only sees a generic error
-- Lambda execution role allows `dynamodb:UpdateItem` on that one table and nothing else
+- Lambda runs under its own execution role, `cloud-resume-lambda-exec`, which allows `dynamodb:UpdateItem` on that one table and writing logs to the function's own log group, and nothing else
 - API Gateway HTTP API with one route, `POST /visit`, throttled to 1 request per second (burst 2)
 - CORS limited to `https://oltun.dev` and `https://www.oltun.dev`
 - Lambda reserved concurrency of 2
@@ -105,9 +105,9 @@ AWS CodeBuild (smallest compute size, 5-minute timeout, one build at a time)
  
 - Every change to `main` goes through a pull request. A GitHub ruleset blocks direct pushes, force-pushes and branch deletion, requires the `checks` job to pass, and has no bypass list. I tested it: a direct push to `main` was rejected
 - `scripts/check.sh` runs three checks: required files exist, the Lambda code parses, and no AWS access key IDs appear in the repo. The same script runs in GitHub Actions (free for public repos) and again inside the AWS build
-- AWS CodePipeline watches `main` through a GitHub connection restricted to this one repository. CodeBuild runs the checks, updates the Lambda function from `backend/lambda_function.py`, uploads `index.html` and `style.css` to the site bucket, and invalidates the CloudFront cache
-- The deploy publishes only those two named files and never deletes anything from the site bucket. Bucket versioning is on, and old versions expire after 30 days, so a bad deploy can also be rolled back from S3
-- Two least-privilege IAM roles: the build role can write those two objects, update that one function, invalidate that one distribution, write its own logs and read the pipeline's artifacts; the pipeline role can use the one GitHub connection, use the artifact bucket and start that one build
+- AWS CodePipeline watches `main` through a GitHub connection restricted to this one repository. CodeBuild runs the checks, updates the Lambda function from `backend/lambda_function.py`, uploads `index.html`, `style.css`, and `favicon.png` to the site bucket, and invalidates the CloudFront cache
+- The deploy publishes only those three named files and never deletes anything from the site bucket. Bucket versioning is on, and old versions expire after 30 days, so a bad deploy can also be rolled back from S3
+- Two least-privilege IAM roles: the build role can write those three objects, update that one function, invalidate that one distribution, write its own logs and read the pipeline's artifacts; the pipeline role can use the one GitHub connection, use the artifact bucket and start that one build
 - Cost limits: smallest build size, a 5-minute build timeout, one concurrent build, a private artifact bucket whose objects expire after 7 days
 - Tested: a harmless change reached the live site in about a minute (not precisely timed). A deliberately failing check stopped the deploy: the build logs show the failure and no later command ran, and the Lambda, S3 and CloudFront timestamps were unchanged. I rolled the break back with `git revert`
 ## Security
@@ -119,7 +119,7 @@ AWS CodeBuild (smallest compute size, 5-minute timeout, one build at a time)
 - The certificate auto-renews as long as its validation records stay in DNS
 - MFA enabled on the AWS, Cloudflare and GitHub accounts (authenticator app)
 - AWS WAF with SQL injection protection: deployed, tested, then decommissioned for cost (see the [Security: AWS WAF](#security-aws-waf-sql-injection-testing) section)
-- The Lambda role follows least privilege: one action, one table
+- The Lambda runs under its own dedicated execution role, limited to one DynamoDB action on one table and log writes to its own function's log group
 - No request data reaches the database: the Lambda ignores the request body and parameters and always updates the same fixed key, so there is no injection surface in the counter itself
 - No AWS credentials exist in the page or the repo; the API endpoint is public by design because browser code has to know it
 - No AWS credentials are stored in GitHub either: the pipeline pulls from inside AWS instead of GitHub pushing in, and `scripts/check.sh` fails the build if an AWS access key ID appears anywhere in the repository
@@ -139,7 +139,7 @@ AWS CodeBuild (smallest compute size, 5-minute timeout, one build at a time)
 - **The checks are shallow.** They catch missing files, Python that doesn't parse, and AWS access key patterns. They don't run the Lambda, validate the HTML or CSS, or catch wrong logic. A change that builds but looks wrong goes live, and the answer to that is `git revert` plus bucket versioning, not the checks.
 - **A pull request can change the checks themselves,** since `scripts/check.sh` lives in the repository. The ruleset still requires the check job to pass, but a change that weakens the script would pass its own weakened version.
 - **No alert for a failed AWS deploy.** GitHub emails me when the Actions run fails, but I haven't set up a notification for the AWS pipeline, so a failed deploy there is visible only if I look.
-- **The deploy isn't all-or-nothing.** The Lambda is updated before the site files, so if a later step failed, the backend could be updated and the site not. Building the Lambda first keeps the page from calling a backend that isn't ready, but it doesn't make the whole deploy atomic.
+- **The deploy isn't all-or-nothing.** The Lambda is updated before the site files, so if a later step fails, the backend can be updated and the site not. Building the Lambda first keeps the page from calling a backend that isn't ready, but it doesn't make the whole deploy atomic. This happened once: when I added a favicon, the build role had no permission to upload the new file, so the build stopped partway. The Lambda, `index.html` and `style.css` had been updated, but `favicon.png` and the cache invalidation had not. The page briefly pointed at an icon that wasn't in the bucket yet, and the cost was a harmless 403 on the icon. I fixed the permission and re-ran the failed build.
 - **Every push to `main` deploys,** including a README-only change. It's harmless, since the same files are uploaded again, but it uses a build minute each time.
 - **Concurrent builds are capped at one.** AWS's documentation says a build over the limit is throttled and not run. I set the limit but haven't tested what two simultaneous pushes do.
 - **The GitHub Actions workflow uses a version tag, not a commit hash.** The action's maintainers could move a tag. The workflow has read-only permissions and no secrets, so the exposure is small, and pinning to a commit hash is the stricter option I haven't taken.
@@ -214,11 +214,12 @@ After the trial I checked whether the visitor-counter API could be protected by 
 
 ## Design decisions and lessons learned
  
-### Hosting, domain and API
+### Hosting, domain, and API
  
 - **Cloudflare DNS instead of Route 53.** Cloudflare Registrar requires Cloudflare's nameservers, so the domain can't use a Route 53 hosted zone without transferring out. The DNS records are "DNS only" so requests go straight to CloudFront and AWS stays the delivery layer.
 - **Regions.** My AWS resources live in `eu-north-1`, the Region assigned to my account. CloudFront needs its certificate in `us-east-1`, and the CloudFront domain setup created the ACM certificate there for me.
 - **HTTP API instead of REST API.** HTTP APIs cost less per request and include built-in CORS and route-level throttling, which is all this counter needs.
+- **A photo carries more than pixels.** The favicon is a cropped photo, and the 64×64 PNG still contained embedded EXIF and XMP metadata chunks that macOS's `sips` tool didn't list. I read the file's chunk structure with a short script, then rewrote it keeping only the chunks needed to draw the image (an allow-list again) and listed the chunks again to confirm. The repository is public, so anything left in that file would have been public too.
 ### The visitor counter and its limits
  
 - **Fixed capacity instead of autoscaling.** I wanted a hard ceiling on cost. With provisioned capacity and auto scaling off, DynamoDB can't scale itself up under heavy traffic; excess requests are throttled instead of billed.
@@ -226,6 +227,7 @@ After the trial I checked whether the visitor-counter API could be protected by 
 - **POST, not GET.** The route changes data, so it uses POST. That also stops crawlers from bumping the count with plain GET requests.
 - **Once per session.** The page remembers the count in `sessionStorage`, so refreshes don't inflate the number or spend write capacity.
 - **Staged limits.** The cost and abuse limits are layered (route throttle, Lambda concurrency cap, fixed DynamoDB capacity, account spend limit) so that no single control is the only thing standing between a traffic flood and the bill.
+- **A narrow policy doesn't narrow a broad one.** I wrote a policy allowing one DynamoDB action on one table, attached it to the Lambda's role, and the README called that least privilege. While reading a build log I noticed the role's name, checked it, and found a broad AWS-managed power-user policy attached to the same role. IAM permissions only add up, so my narrow policy limited nothing. I left that role alone, because I didn't know what else relied on it, and created a dedicated role that only Lambda can assume. It has the one DynamoDB policy plus a log-write policy scoped to the function's own log group. I then switched the function over and confirmed that the counter still increments and new log lines appear. The function ignores request data, so the practical risk was small, but my claim was wrong until I checked it.
 ### CI/CD
  
 - **Keyless GitHub-to-AWS deployment was blocked, so the pipeline pulls instead.** My plan was GitHub Actions authenticating to AWS with OIDC, which needs no stored AWS keys. In my account, listing and creating an OIDC identity provider were both refused with an explicit deny from a service control policy at the organization level, which I can't see or change. My reading is that this account type is created inside an AWS-managed organization; I haven't confirmed that from AWS's own documentation. I considered three alternatives:
@@ -234,7 +236,7 @@ After the trial I checked whether the visitor-counter API could be protected by 
   - *A pull-based pipeline.* AWS CodePipeline watches the repository through a GitHub connection, and CodeBuild does the deploying with a role inside the account. This is what I built. GitHub holds no AWS credentials at all, and the only thing AWS holds is a connection limited to one public repository.
 - **"Available" didn't mean the GitHub connection worked.** My first connection showed Available but the app wasn't installed on my GitHub account, so the connection couldn't see any repository. The real test was the repository dropdown in the new-pipeline wizard, which came up empty. I deleted both connections, revoked the old GitHub authorization and recreated the connection with the app installed on only this repository. I found out afterwards that GitHub lists "authorized" and "installed" apps on separate pages, and only the installed one carries the repository choice. The console page for creating a connection also hung once, so I created the connection from the command line and finished it in the console.
 - **Test the gate, don't just build it.** A green pipeline doesn't prove the checks work. I pushed a change that makes the check script fail, and confirmed from the build logs that it stopped at the first failing command and that no later command ran. The Lambda, S3 and CloudFront timestamps hadn't changed either. I then undid it with `git revert`, which adds a new commit and keeps the history intact, instead of rewriting history.
-- **Publish by allow-list.** The build uploads only `index.html` and `style.css`. Nothing else in the repository (this README, `backend/`, `docs/`, the pipeline files) can reach the public bucket by accident, and the sync never deletes. New public files have to be added deliberately.
+- **Publish by allow-list.** The build uploads only `index.html`, `style.css` and `favicon.png`. Nothing else in the repository (this README, `backend/`, `docs/`, the pipeline files) can reach the public bucket by accident, and the sync never deletes. New public files have to be added deliberately, in three places: the build file, the required-files check, and the build role's IAM policy. When I added the favicon I had updated the first two but not the policy, so the first deploy failed with an AccessDenied error on that one object. The allow-list did its job, and the fix was to add the one object to the policy instead of widening it.
 - **Split the roles.** The pipeline's role can use the GitHub connection and start the build but can't touch the site. The build's role can update the site and the function but can't talk to GitHub. Each is limited to the exact resources it needs, with no wildcards on actions.
 - **Created the supporting pieces myself.** I created the artifact bucket (private, encrypted, objects expire after 7 days) and the build project from the command line, instead of letting the console wizard create them, so I could set the limits: a 5-minute timeout, the smallest build size, one build at a time.
 - **Verified, not assumed.** Some commands I wrote came from my memory of AWS's documentation. When a command's output surprised me, such as an empty versioning status or an extra field in a lifecycle response, I checked it with a second command instead of taking it on trust.
@@ -270,5 +272,7 @@ The DynamoDB console estimates about $0.63/month for 1 read and 1 write unit bef
 - [x] Visitor counter (API Gateway, Lambda, DynamoDB)
 - [x] CI/CD: pull request ruleset, GitHub Actions checks, and a pull-based AWS pipeline (CodePipeline and CodeBuild) that deploys the site and the Lambda from `main`
 - [ ] Write-up and blog post
-- [ ] Restyle the site (the counter's position is temporary, and a favicon is missing, so browsers' automatic favicon request returns a harmless 403)
+- [ ] Restyle the site (the counter's position is temporary)
 - [x] Evaluated a WAF in front of the API and decided against it (see [why I did not put a WAF in front of the API](#why-i-did-not-put-a-waf-in-front-of-the-api))
+- [x] Favicon, published through the pipeline (the browser's automatic favicon request no longer returns a 403)
+- [x] Dedicated execution role for the Lambda, instead of a broad existing role
