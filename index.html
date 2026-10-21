@@ -3,138 +3,423 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oltun Erim Ozavci - Resume</title>
+  <title>Oltun Erim Ozavci | Computer Science, Cloud &amp; Security</title>
+  <meta name="description" content="Oltun Erim Ozavci: MEng Computer Science student at UCL building towards a career as a Security Architect.">
+  <meta name="theme-color" content="#0a0a0b">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="/favicon.png">
+  <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"></div>
+  <div class="glow" aria-hidden="true"></div>
 
-    <header>
-      <h1>Oltun Erim Ozavci</h1>
-      <p>MEng Computer Science Student at UCL · Aspiring Security Architect</p>
-      <nav>
-        <a href="https://github.com/oltun">GitHub</a> ·
-        <a href="www.linkedin.com/in/oltun-erim-ozavci-4254232a1">LinkedIn</a>
-      </nav>
-    </header>
-  
-    <main>
-      <section id="summary">
-        <h2>Summary</h2>
-        <p>MEng Computer Science student at UCL with hands-on experience in cloud infrastructure, IoT endpoint administration and database design in a regulated healthcare environment. Building towards a career as a Security Architect through projects in cloud, security tooling and full-stack development.</p>
-      </section>
-  
-      <section id="experience">
-        <h2>Work Experience</h2>
-        <article>
-          <h3>Digital Projects Assistant (Interim Officer), Infrastructure &amp; Systems</h3>
-          <p>CW+ (Chelsea and Westminster NHS Foundation Trust), London · October 2023 – March 2024</p>
-          <ul>
-            <li><strong>Cloud Infrastructure &amp; Migration Strategy:</strong> Optimised and maintained existing cloud-based content delivery networks for A&amp;E in direct collaboration with Samsung. Led technical assessments with international SaaS vendors to architect a cloud-migration plan for hundreds of legacy, on-premise devices.</li>
-            <li><strong>IoT Endpoint Administration &amp; System Reliability:</strong> Administered a distributed hybrid fleet of IoT endpoints, including smart displays, AR/VR systems, robotics and environmental sensors. Designed a cost-effective asset management strategy that significantly reduced downtime and improved reliability across two major hospitals.</li>
-            <li><strong>Data Modelling &amp; Architecture:</strong> Designed and implemented a normalised database schema to catalogue digital assets and connected devices, establishing high data integrity and a reliable foundation for asset tracking.</li>
-            <li><strong>Cross-Functional Tech Deployment:</strong> Led the installation of novel digital technologies for the 'Future Hospital' initiative, navigating the strict operational and compliance constraints of a highly regulated healthcare environment.</li>
-          </ul>
-        </article>
-      </section>
-  
-      <section id="projects">
-        <h2>Projects</h2>
-  
-        <article>
-          <h3>F1-JARVIS-GRANITE — Lead VR Engineer</h3>
-          <p>November 2025 – March 2026 · Immersive VR racing analysis environment built for an IBM / UCL IXN project</p>
-          <p><strong>Stack:</strong> Unreal Engine 4.27, C++, Blueprints, Python (Pillow), Blender, Win32 API, Convai, Kantan Charts Plugin</p>
-          <ul>
-            <li>Architected a high-fidelity VR engineering hub with optimised 3D asset pipelines and real-time telemetry visualisation.</li>
-            <li>Developed a dynamic charting system with Win32 API integration and data down-sampling for stable VR performance, alongside Convai AI-driven interactive media.</li>
-            <li>Engineered JSON data parsing and modular Blueprint architecture to bridge immersive UI/UX with professional post-race analytical tools for Meta Quest and Windows PC.</li>
-          </ul>
-        </article>
-  
-        <article>
-          <h3>FinDash — Financial Data Web App</h3>
-          <p>September 2025 · Full-stack application for financial data visualisation</p>
-          <p><strong>Stack:</strong> React, Node.js/Express, PostgreSQL, REST APIs, JWT authentication, cloud deployment (Render)</p>
-          <ul>
-            <li>Implemented user watchlists, interactive D3.js/Recharts graphs, secure login and a modular API architecture.</li>
-            <li>Integrated machine learning models (regression and time-series forecasting) for stock trend analysis and price forecasting.</li>
-          </ul>
-        </article>
-  
-        <article>
-          <h3>Password Cracker (SHA-256, MD5, bcrypt)</h3>
-          <p>August 2025 · Modular password cracking tool demonstrating attack methods</p>
-          <p><strong>Stack:</strong> Python, hashlib, bcrypt, CLI (argparse, tqdm), multiprocessing</p>
-          <ul>
-            <li>Built dictionary, hybrid and brute-force attacks with real-time progress bars and results reporting.</li>
-            <li>Used multiprocessing to speed up brute-force search, with a modular structure for adding further hash algorithms.</li>
-          </ul>
-        </article>
-  
-        <article>
-          <h3>Additional Software Development</h3>
-          <ul>
-            <li><strong>Bioreactor Control System (C++, Arduino):</strong> Sensor-based microcontroller for pH, temperature and agitation control.</li>
-            <li><strong>3D Horror Video Game (Unity, C#, Blender):</strong> First-person survival horror game focused on immersive gameplay.</li>
-            <li><strong>Web-Based Note-Taking App (Java, Maven):</strong> CRUD app with servlet-based backend and HTML/CSS frontend.</li>
-          </ul>
-        </article>
-      </section>
-  
-      <section id="education">
-        <h2>Education</h2>
-        <article>
-          <h3>University College London</h3>
-          <p>MEng Computer Science (First Class Honours) · September 2024 – Ongoing</p>
-        </article>
-        <article>
-          <h3>Kensington Aldridge Academy</h3>
-          <p>A-Levels: Mathematics (A*), Physics (A), Computer Science (B) · September 2021 – July 2023</p>
-        </article>
-      </section>
-  
-      <section id="skills">
-        <h2>Languages &amp; Interests</h2>
-        <ul>
-          <li>Languages: English (Native), Turkish (Native), French (DELF B1)</li>
-          <li>Interests: UCL Mankind (Men's Mental Health Society), UCL Football Team, Competitive Tennis (Regional level)</li>
+  <nav class="nav" aria-label="Sections">
+    <a class="brand" href="#top" aria-label="Back to top"><span class="brand-mark">O</span><span class="brand-text">oltun.dev</span></a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#education">Education</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <p class="eyebrow"><span class="dot" aria-hidden="true"></span> MEng Computer Science · UCL</p>
+      <h1 class="name">Oltun Erim<br><span class="accent">Ozavci</span></h1>
+      <p class="role">
+        <span class="sr-only">Aspiring Security Architect, working across cloud, security and full-stack development.</span>
+        <span class="typed" aria-hidden="true"><span class="typed-prefix">&gt; </span><span id="typed">Aspiring Security Architect</span><span class="caret"></span></span>
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#projects">View projects</a>
+        <a class="btn" href="https://github.com/oltun" rel="noopener noreferrer">GitHub</a>
+        <a class="btn" href="https://www.linkedin.com/in/oltun-erim-ozavci-4254232a1" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+
+    <figure class="term" aria-label="How this site is served">
+      <div class="term-bar" aria-hidden="true"><span></span><span></span><span></span><em>~/cloud-resume</em></div>
+      <pre class="term-body"><code><span class="t-p">$</span> trace oltun.dev
+<span class="t-k">dns</span>      Cloudflare (DNS only)
+<span class="t-k">edge</span>     CloudFront · TLS 1.2+
+<span class="t-k">origin</span>   private S3 · OAC
+<span class="t-k">counter</span>  API GW → Lambda → DynamoDB
+<span class="t-k">deploy</span>   PR → checks → CodePipeline
+<span class="t-ok">✓ served over HTTPS</span></code></pre>
+    </figure>
+
+    <a class="scroll-cue" href="#about" aria-label="Scroll to about"><span></span></a>
+  </header>
+
+  <main id="main">
+    <section id="about" class="section">
+      <div class="section-head reveal">
+        <span class="idx" aria-hidden="true">01</span>
+        <h2>About</h2>
+      </div>
+      <div class="about reveal">
+        <p class="lead">MEng Computer Science student at UCL with hands-on experience in cloud infrastructure, IoT endpoint administration and database design in a regulated healthcare environment.</p>
+        <p>Building towards a career as a Security Architect through projects in cloud, security tooling and full-stack development, including this site: a CV hosted on AWS with a serverless visitor counter and a pull-request-gated deployment pipeline.</p>
+        <ul class="stats">
+          <li><strong>2</strong><span>London hospitals supported</span></li>
+          <li><strong>1</strong><span>IBM industry project</span></li>
+          <li><strong>3</strong><span>languages spoken</span></li>
         </ul>
-      </section>
-    </main>
+      </div>
+    </section>
 
-    <p id="visitor-count" hidden>Visitors: <span id="visitor-count-value"></span></p>
+    <section id="experience" class="section">
+      <div class="section-head reveal">
+        <span class="idx" aria-hidden="true">02</span>
+        <h2>Experience</h2>
+      </div>
 
-    <script>
-        (async () => {
-          const API_URL = "https://hthzo9eeo0.execute-api.eu-north-1.amazonaws.com/visit";
-          const box = document.getElementById("visitor-count");
-          const out = document.getElementById("visitor-count-value");
-          if (!box || !out) return;
-        
-          try {
-            let stored = null;
-            try { stored = sessionStorage.getItem("visitCount"); } catch (_) {}
-        
-            let count = Number(stored);
-            if (stored === null || !Number.isFinite(count)) {
-              const res = await fetch(API_URL, { method: "POST" });
-              if (!res.ok) throw new Error("HTTP " + res.status);
-              const data = await res.json();
-              count = Number(data.count);
-              if (!Number.isFinite(count)) throw new Error("Bad response");
-              try { sessionStorage.setItem("visitCount", String(count)); } catch (_) {}
-            }
-        
-            out.textContent = count.toLocaleString("en-GB");
-            box.hidden = false;
-          } catch (err) {
-            console.warn("Visitor counter unavailable:", err);
-          }
-        })();
-        </script>
-  
-  </body>
+      <ol class="timeline">
+        <li class="reveal">
+          <article class="card spot">
+            <p class="meta">Oct 2023 – Mar 2024 · Part-time · On-site</p>
+            <h3>Digital Projects Assistant (Interim Officer), Infrastructure &amp; Systems</h3>
+            <p class="org">CW+ · Chelsea and Westminster Hospital &amp; West Middlesex University Hospital</p>
+            <p>Stepped into an interim leadership role managing the digital infrastructure and patient-facing technology across two major London hospitals, maintaining high-uptime systems while architecting a modernisation roadmap for legacy hardware.</p>
+            <details>
+              <summary>Key achievements</summary>
+              <div class="details-body">
+                <h4>Cloud infrastructure &amp; migration strategy</h4>
+                <ul>
+                  <li>Optimised and maintained high-availability cloud-based content delivery networks for the A&amp;E department in direct collaboration with Samsung.</li>
+                  <li>Led technical vendor assessments with international SaaS providers to architect a cloud-migration strategy to replace hundreds of legacy, on-premise devices.</li>
+                </ul>
+                <h4>IoT &amp; endpoint management</h4>
+                <ul>
+                  <li>Administered a distributed hybrid fleet of IoT endpoints, from smart displays and environmental sensors to AR/VR systems and robotics.</li>
+                  <li>Developed a cost-effective asset management strategy that significantly reduced downtime and improved reliability across critical clinical environments.</li>
+                </ul>
+                <h4>Data modelling &amp; architecture</h4>
+                <ul>
+                  <li>Designed and implemented a fully normalised relational schema to catalogue digital assets and connected devices, giving the CW+ charity a reliable foundation for asset tracking.</li>
+                </ul>
+                <h4>Deployment &amp; compliance</h4>
+                <ul>
+                  <li>Led the installation of novel digital technologies for the 'Future Hospital' initiative, focused on patient and staff wellbeing.</li>
+                  <li>Navigated the operational and compliance constraints of a highly regulated healthcare environment, coordinating stakeholders so solutions met NHS safety standards.</li>
+                </ul>
+              </div>
+            </details>
+          </article>
+        </li>
+        <li class="reveal">
+          <article class="card spot">
+            <p class="meta">Oct 2023 – Dec 2023 · Volunteering</p>
+            <h3>Volunteer Staff</h3>
+            <p class="org">Chelsea and Westminster Hospital NHS Foundation Trust</p>
+          </article>
+        </li>
+      </ol>
+    </section>
+
+    <section id="projects" class="section">
+      <div class="section-head reveal">
+        <span class="idx" aria-hidden="true">03</span>
+        <h2>Projects</h2>
+      </div>
+
+      <div class="filters reveal" role="group" aria-label="Filter projects">
+        <button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="chip" data-filter="security" aria-pressed="false">Security</button>
+        <button type="button" class="chip" data-filter="cloud" aria-pressed="false">Cloud &amp; Web</button>
+        <button type="button" class="chip" data-filter="ai" aria-pressed="false">AI &amp; VR</button>
+        <button type="button" class="chip" data-filter="games" aria-pressed="false">Games &amp; Hardware</button>
+      </div>
+      <p class="sr-only" id="filter-status" aria-live="polite"></p>
+
+      <div class="grid">
+        <article class="card spot project reveal" data-tags="ai">
+          <p class="meta">Nov 2025 – Mar 2026 · UCL IXN × IBM</p>
+          <h3>F1 Jarvis Granite</h3>
+          <p class="role-tag">Lead VR Engineer</p>
+          <p>An AI-enhanced motorsport telemetry and strategy platform built by Team 17 through the UCL Industry Exchange Network with IBM, using fine-tuned IBM Granite LLMs as a real-time race engineer and post-race analyst.</p>
+          <ul class="tags"><li>Unreal Engine 4.27</li><li>C++</li><li>IBM Granite</li><li>Python</li></ul>
+          <details>
+            <summary>Details</summary>
+            <div class="details-body">
+              <ul>
+                <li><strong>Jarvis Live:</strong> a real-time telemetry dashboard ingesting Assetto Corsa data at 60 Hz, with an STT-LLM-TTS pipeline for live verbal AI coaching.</li>
+                <li><strong>Jarvis Post:</strong> a debriefing tool powered by Granite 4.0 Micro that generates structured 16-section engineering reports.</li>
+                <li><strong>Jarvis VR:</strong> an immersive Unreal Engine environment with interactive pit-wall displays and AI-driven presentations.</li>
+                <li><strong>My role:</strong> architected Jarvis VR, built the C++ telemetry visualisation system, implemented AI interactive media and integrated native OS file parsing.</li>
+              </ul>
+              <p class="links"><a href="https://students.cs.ucl.ac.uk/2025/group17/" rel="noopener noreferrer">Project hub ↗</a><a href="https://www.jarvisgranite.com" rel="noopener noreferrer">Dev blog ↗</a></p>
+            </div>
+          </details>
+        </article>
+
+        <article class="card spot project reveal" data-tags="cloud security">
+          <p class="meta">Oct 2026 · This site</p>
+          <h3>Secure Cloud Resume</h3>
+          <p class="role-tag">Cloud &amp; security</p>
+          <p>This CV as a static site on AWS: private S3 behind CloudFront, a serverless visitor counter with hard cost ceilings, and a keyless, pull-request-gated deployment pipeline.</p>
+          <ul class="tags"><li>AWS</li><li>IAM</li><li>Lambda</li><li>CI/CD</li></ul>
+          <details>
+            <summary>Details</summary>
+            <div class="details-body">
+              <ul>
+                <li>Private S3 bucket readable only by CloudFront via Origin Access Control; HTTPS with TLS 1.2+.</li>
+                <li>Visitor counter: API Gateway HTTP API → Lambda → DynamoDB, with a route throttle, concurrency cap and fixed capacity.</li>
+                <li>Pull-based CodePipeline, so GitHub holds no AWS credentials; least-privilege roles and an allow-list deploy.</li>
+                <li>AWS WAF SQL-injection rules trialled, tested in monitor and blocking modes, then decommissioned for cost.</li>
+              </ul>
+              <p class="links"><a href="https://github.com/oltun/cloud-resume" rel="noopener noreferrer">Source &amp; write-up ↗</a></p>
+            </div>
+          </details>
+        </article>
+
+        <article class="card spot project reveal" data-tags="cloud security">
+          <p class="meta">Sep 2025</p>
+          <h3>FinDash</h3>
+          <p class="role-tag">Full-stack finance dashboard</p>
+          <p>A deployed finance dashboard with secure authentication, personal watchlists, interactive charts with technical indicators and an ML-powered trading advisor.</p>
+          <ul class="tags"><li>React + TypeScript</li><li>FastAPI</li><li>PostgreSQL</li><li>JWT</li></ul>
+          <details>
+            <summary>Details</summary>
+            <div class="details-body">
+              <ul>
+                <li>React (Vite + TypeScript) frontend, FastAPI backend and PostgreSQL (Neon), deployed on Vercel and Render with auto-deploy from GitHub.</li>
+                <li>Auth with bcrypt password hashing and JWTs in HTTP-only cookies.</li>
+                <li>Candlestick charts with SMA20/SMA50 overlays and an RSI panel; watchlists backed by yfinance data.</li>
+                <li>Prototype ML advisor estimating probability of upward movement and volatility regime, with Buy/Hold/Sell signals.</li>
+              </ul>
+              <p class="links"><a href="https://fin-dash-seven.vercel.app" rel="noopener noreferrer">Live demo ↗</a></p>
+            </div>
+          </details>
+        </article>
+
+        <article class="card spot project reveal" data-tags="security">
+          <p class="meta">Aug 2025</p>
+          <h3>Password Cracker</h3>
+          <p class="role-tag">Security tooling</p>
+          <p>A modular Python tool for educational use that demonstrates why weak passwords fail and why slow hashing algorithms like bcrypt matter.</p>
+          <ul class="tags"><li>Python</li><li>SHA-256</li><li>MD5</li><li>bcrypt</li></ul>
+          <details>
+            <summary>Details</summary>
+            <div class="details-body">
+              <ul>
+                <li>Dictionary, hybrid (substitutions and suffixes) and brute-force attacks, with summaries of cracked and uncracked hashes.</li>
+                <li>CLI with real-time progress bars, plus a hash database generator for test datasets.</li>
+                <li>Structured for extension with new algorithms or attack methods.</li>
+              </ul>
+            </div>
+          </details>
+        </article>
+
+        <article class="card spot project reveal" data-tags="games">
+          <p class="meta">Jun 2025 – Jul 2025</p>
+          <h3>Run From It</h3>
+          <p class="role-tag">3D survival horror game</p>
+          <p>A first-person survival horror game in which players navigate a pixelated maze while evading an AI-driven monster.</p>
+          <ul class="tags"><li>Unity</li><li>C#</li><li>NavMesh AI</li></ul>
+          <details>
+            <summary>Details</summary>
+            <div class="details-body">
+              <ul>
+                <li>Core mechanics: movement, sprinting and jumping, NavMesh pathfinding AI, death and respawn, collectible win conditions.</li>
+                <li>Minimalist UI with menus, tutorial and options screens, video backgrounds and audio.</li>
+                <li>13 alpha tests and a closed beta to tune difficulty and usability; optimised for mid-range hardware.</li>
+              </ul>
+            </div>
+          </details>
+        </article>
+
+        <article class="card spot project reveal" data-tags="games cloud">
+          <p class="meta">Earlier work</p>
+          <h3>More builds</h3>
+          <p class="role-tag">Hardware &amp; web</p>
+          <ul class="compact">
+            <li><strong>Bioreactor control system:</strong> C++ on Arduino, sensor-based control of pH, temperature and agitation.</li>
+            <li><strong>Note-taking web app:</strong> Java and Maven CRUD app with a servlet backend.</li>
+          </ul>
+          <ul class="tags"><li>C++</li><li>Arduino</li><li>Java</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="education" class="section">
+      <div class="section-head reveal">
+        <span class="idx" aria-hidden="true">04</span>
+        <h2>Education &amp; more</h2>
+      </div>
+
+      <div class="edu">
+        <article class="card spot reveal">
+          <p class="meta">Sep 2024 – Jun 2028</p>
+          <h3>University College London</h3>
+          <p class="org">MEng Computer Science · First Class Honours (current)</p>
+          <p>Societies: Cyber Security Society, UCL Football Club, Mankind (Men's Mental Health Society).</p>
+        </article>
+        <article class="card spot reveal">
+          <p class="meta">Sep 2021 – Jun 2023</p>
+          <h3>Kensington Aldridge Academy</h3>
+          <p class="org">A-Levels: Mathematics (A*), Physics (A), Computer Science (B)</p>
+          <p>Engineering Society, football and rowing.</p>
+        </article>
+        <article class="card spot reveal">
+          <p class="meta">Certification · May 2019</p>
+          <h3>DELF B1</h3>
+          <p class="org">Ministère de l'Éducation nationale</p>
+        </article>
+        <article class="card spot reveal">
+          <p class="meta">Beyond the screen</p>
+          <h3>Languages &amp; interests</h3>
+          <p class="org">English and Turkish (native) · French (DELF B1)</p>
+          <p>Competitive tennis at regional level, UCL football, and men's mental health advocacy with Mankind.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p id="visitor-count" class="counter" hidden><span class="pulse" aria-hidden="true"></span>Visitors <strong id="visitor-count-value"></strong></p>
+    <p class="fine">Served from a private S3 bucket through CloudFront · deployed by CodePipeline from a pull request that passes checks · <a href="https://github.com/oltun/cloud-resume" rel="noopener noreferrer">source</a></p>
+    <p class="fine">© <span id="year">2026</span> Oltun Erim Ozavci</p>
+  </footer>
+
+  <script>
+  (() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(pointer: fine)").matches;
+
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+
+    /* Typing effect: cycles roles; static text when motion is reduced */
+    const typed = document.getElementById("typed");
+    const roles = [
+      "Aspiring Security Architect",
+      "Cloud infrastructure on AWS",
+      "Security tooling & research",
+      "Full-stack development",
+      "VR & AI engineering"
+    ];
+    if (typed && !reduce) {
+      let r = 0, i = roles[0].length, deleting = true;
+      const tick = () => {
+        const word = roles[r];
+        i += deleting ? -1 : 1;
+        typed.textContent = word.slice(0, i);
+        let delay = deleting ? 35 : 70;
+        if (!deleting && i === word.length) { deleting = true; delay = 2200; }
+        else if (deleting && i === 0) { deleting = false; r = (r + 1) % roles.length; delay = 350; }
+        setTimeout(tick, delay);
+      };
+      setTimeout(tick, 2600);
+    }
+
+    /* Scroll reveal */
+    const revealEls = document.querySelectorAll(".reveal");
+    if (reduce || !("IntersectionObserver" in window)) {
+      revealEls.forEach(el => el.classList.add("in"));
+    } else {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+      revealEls.forEach(el => io.observe(el));
+    }
+
+    /* Scroll progress bar and nav state */
+    const bar = document.querySelector(".progress");
+    const nav = document.querySelector(".nav");
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = "scaleX(" + (max > 0 ? scrollY / max : 0) + ")";
+      nav.classList.toggle("scrolled", scrollY > 24);
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    /* Highlight the nav link for the section in view */
+    const links = Array.from(document.querySelectorAll(".nav ul a"));
+    if ("IntersectionObserver" in window) {
+      const sectionIO = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
+        });
+      }, { rootMargin: "-45% 0px -50% 0px" });
+      document.querySelectorAll("main section[id]").forEach(s => sectionIO.observe(s));
+    }
+
+    /* Project filters */
+    const chips = document.querySelectorAll(".chip");
+    const projects = document.querySelectorAll(".project");
+    const status = document.getElementById("filter-status");
+    chips.forEach(chip => chip.addEventListener("click", () => {
+      const f = chip.dataset.filter;
+      chips.forEach(c => c.setAttribute("aria-pressed", String(c === chip)));
+      let shown = 0;
+      projects.forEach(p => {
+        const match = f === "all" || p.dataset.tags.split(" ").includes(f);
+        p.hidden = !match;
+        if (match) { shown++; p.classList.add("in"); }
+      });
+      status.textContent = shown + " project" + (shown === 1 ? "" : "s") + " shown";
+    }));
+
+    /* Pointer glow and card spotlight (mouse only, motion allowed) */
+    if (finePointer && !reduce) {
+      const glow = document.querySelector(".glow");
+      addEventListener("pointermove", e => {
+        glow.style.transform = "translate(" + (e.clientX - 300) + "px," + (e.clientY - 300) + "px)";
+        glow.style.opacity = "1";
+      }, { passive: true });
+      document.querySelectorAll(".spot").forEach(card => {
+        card.addEventListener("pointermove", e => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty("--mx", (e.clientX - r.left) + "px");
+          card.style.setProperty("--my", (e.clientY - r.top) + "px");
+        });
+      });
+    }
+
+    /* Visitor counter: one POST per browser session, written with textContent */
+    (async () => {
+      const API_URL = "https://hthzo9eeo0.execute-api.eu-north-1.amazonaws.com/visit";
+      const box = document.getElementById("visitor-count");
+      const out = document.getElementById("visitor-count-value");
+      if (!box || !out) return;
+
+      try {
+        let stored = null;
+        try { stored = sessionStorage.getItem("visitCount"); } catch (_) {}
+
+        let count = Number(stored);
+        if (stored === null || !Number.isFinite(count)) {
+          const res = await fetch(API_URL, { method: "POST" });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          count = Number(data.count);
+          if (!Number.isFinite(count)) throw new Error("Bad response");
+          try { sessionStorage.setItem("visitCount", String(count)); } catch (_) {}
+        }
+
+        const fmt = n => Math.round(n).toLocaleString("en-GB");
+        box.hidden = false;
+        if (reduce || count < 2) { out.textContent = fmt(count); return; }
+        const start = performance.now(), dur = 1200;
+        const step = now => {
+          const t = Math.min(1, (now - start) / dur);
+          out.textContent = fmt(count * (1 - Math.pow(1 - t, 3)));
+          if (t < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      } catch (err) {
+        console.warn("Visitor counter unavailable:", err);
+      }
+    })();
+  })();
+  </script>
+</body>
 </html>
-
-<!-- Deployed by CodePipeline via pull request -->
