@@ -16,6 +16,7 @@ My CV as a static website on AWS, live at **https://oltun.dev**, with a serverle
  
 - https://oltun.dev
 - https://www.oltun.dev
+- Blog post: [A Cloud Resume as a Security Exercise](https://oltun.hashnode.dev/a-cloud-resume-as-a-security-exercise-what-got-blocked-what-i-tested-and-what-i-got-wrong)
 ## Architecture
  
 There are three paths through the system: one serves the page, one powers the visitor counter, and one deploys changes.
@@ -271,8 +272,8 @@ The DynamoDB console estimates about $0.63/month for 1 read and 1 write unit bef
 - [x] AWS WAF with SQL injection protection: deployed, tested, decommissioned (see the [Security](#security) section)
 - [x] Visitor counter (API Gateway, Lambda, DynamoDB)
 - [x] CI/CD: pull request ruleset, GitHub Actions checks, and a pull-based AWS pipeline (CodePipeline and CodeBuild) that deploys the site and the Lambda from `main`
-- [ ] Write-up and blog post
 - [x] Restyled the site: red and black theme with interactive elements, content updated from my LinkedIn profile, visitor counter moved into the footer
 - [x] Evaluated a WAF in front of the API and decided against it (see [why I did not put a WAF in front of the API](#why-i-did-not-put-a-waf-in-front-of-the-api))
 - [x] Favicon, published through the pipeline (the browser's automatic favicon request no longer returns a 403)
 - [x] Dedicated execution role for the Lambda, instead of a broad existing role
+- [x] Write-up and blog post: [published on Hashnode](https://oltun.hashnode.dev/a-cloud-resume-as-a-security-exercise-what-got-blocked-what-i-tested-and-what-i-got-wrong)
